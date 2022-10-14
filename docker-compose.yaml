@@ -1,0 +1,35 @@
+version: '3.1'
+
+services:
+
+  wordpress_site:
+    image: wordpress
+    container_name: site_code
+    restart: always
+    ports:
+      - 80:80
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_PASSWORD: h76gtd34
+      WORDPRESS_DB_NAME: wp_db
+      WORDPRESS_DB_USER: wp_user
+    volumes:
+       - type: bind
+         source: ./
+         target: /var/www/html
+    links:
+     - mysql_site:mysql
+
+  mysql_site:
+    image: mysql:5.7
+    command: --max_allowed_packet=3250585600      # Set max_allowed_packet
+    container_name: site_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: h76gtd34
+      MYSQL_ROOT_HOST: mysql:3306
+      MYSQL_DATABASE: wp_db
+      MYSQL_USER: wp_user
+      MYSQL_PASSWORD: h76gtd34
+    volumes:
+      - ./mysql/:/var/lib/mysql
